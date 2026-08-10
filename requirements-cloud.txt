@@ -1,7 +1,6 @@
-# Minimal deps for Streamlit Community Cloud (dashboard only).
-# Rename to requirements.txt for deploy, or copy these lines into the app settings.
-pandas>=2.1.0
-numpy>=1.26.0
+# Same as requirements.txt (kept for docs); Streamlit Cloud reads requirements.txt by default.
+pandas>=2.1.0,<3
+numpy>=1.26.0,<3
 pyarrow>=14.0.0
 streamlit>=1.31.0
 plotly>=5.18.0

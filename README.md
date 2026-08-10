@@ -108,7 +108,8 @@ Save images under `docs/` (optional) and link them here for submissions.
 Load_Watch/
 ├── README.md
 ├── LICENSE
-├── requirements.txt
+├── requirements.txt          # dashboard (Cloud)
+├── requirements-pipeline.txt # training pipeline
 ├── data/raw/            # API + scrape caches (parquet)
 ├── data/processed/      # features, injuries, scored tables
 ├── src/
@@ -137,7 +138,7 @@ python -m venv .venv
 # Windows
 .\.venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install -r requirements-pipeline.txt
 
 # Build data, train models, compute SHAP (first run downloads/caches NBA + injury data)
 python scripts/run_pipeline.py --season 2023-24
@@ -187,8 +188,8 @@ If the parquet files are missing locally, run `python scripts/run_pipeline.py --
 5. **Main file path:** `dashboard/app.py`
 6. **App URL (slug):** e.g. `loadwatch` → public URL `https://loadwatch.streamlit.app`
 7. **Advanced settings → Python version:** `3.11` (matches `.python-version`)
-8. **Dependencies:** default `requirements.txt` works (slower install). For a faster boot, temporarily use the lines in `requirements-cloud.txt` as your `requirements.txt` on a deploy branch.
-9. Click **Deploy**. First build may take several minutes if using the full `requirements.txt`.
+8. **Dependencies:** `requirements.txt` (dashboard-only; fast install on Cloud). Use `requirements-pipeline.txt` for local training.
+9. Click **Deploy**. First build is usually under a minute with the slim deps.
 
 ### “Try it out” link for Devpost
 
@@ -201,7 +202,8 @@ Example: `https://loadwatch.streamlit.app`
 ### Troubleshooting
 
 - **“No scored data found”** — parquet files are not on the branch Streamlit built; commit and push them.
-- **Import errors for `shap` / `xgboost`** — use full `requirements.txt`, or ensure you are on the lazy-import `explain.py` (dashboard does not need those at runtime).
+- **"Error installing requirements"** — Cloud uses slim `requirements.txt`; install `requirements-pipeline.txt` only for local training (`xgboost`, `shap`, `nba-injury-report`, etc.).
+- **Import errors for `shap` / `xgboost`** — dashboard uses lazy imports in `explain.py`; those packages are not needed at runtime on Cloud.
 - **Repo size** — do not commit `data/raw/`, `models/*.joblib`, or `scored_2023-24.csv`; parquet is enough.
 
 ### Alternatives if Streamlit Cloud is blocked
