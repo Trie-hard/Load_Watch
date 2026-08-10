@@ -1,0 +1,37 @@
+{
+  "season": "2023-24",
+  "feature_columns": [
+    "minutes_last_7d",
+    "minutes_last_14d",
+    "games_last_7d",
+    "is_back_to_back",
+    "rest_days",
+    "season_minutes_cumulative",
+    "age",
+    "days_since_last_injury",
+    "distance_last_7d"
+  ],
+  "metrics": [
+    {
+      "model": "logistic_regression",
+      "n_test": 6308,
+      "n_positive_test": 278,
+      "positive_rate_test": 0.044071020925808495,
+      "roc_auc": 0.6184837204862975,
+      "pr_auc": 0.06562224091657272
+    },
+    {
+      "model": "xgboost",
+      "n_test": 6308,
+      "n_positive_test": 278,
+      "positive_rate_test": 0.044071020925808495,
+      "roc_auc": 0.5385593018122815,
+      "pr_auc": 0.053965546907845476
+    }
+  ],
+  "train_rows": 18908,
+  "test_rows": 6308,
+  "train_end_date": "2024-03-04",
+  "test_start_date": "2024-03-05",
+  "notes": "Validation uses a chronological train/test split. Primary metrics are ROC-AUC and PR-AUC; accuracy is not emphasized because soft-tissue labels are heavily imbalanced."
+}
