@@ -150,6 +150,70 @@ Re-runs reuse `data/raw/*.parquet` caches. Force a feature rebuild with `--rebui
 
 ---
 
+## Deploy on Streamlit Community Cloud (public demo)
+
+The dashboard reads **pre-scored** artifacts at runtime — it does **not** call the NBA API or retrain models. For a public demo you must commit the processed parquet files (not the full pipeline outputs).
+
+### What the app needs in the repo
+
+| Path | In git today? | Purpose |
+|------|---------------|---------|
+| `data/processed/scored_2023-24.parquet` | **No** (gitignored until you add it) | Player-game risk scores + SHAP factors |
+| `data/processed/injuries_clean_2023-24.parquet` | **No** | Injury markers on charts |
+| `models/metrics.json` | Yes | Model transparency table |
+| `dashboard/app.py`, `src/` | Yes | App code |
+
+Parquet is preferred (~6 MB total). CSV fallbacks work but `scored_2023-24.csv` is ~35 MB.
+
+### One-time: commit demo data and push
+
+From the project root (after pulling these config changes):
+
+```bash
+git add .gitignore .streamlit/config.toml .python-version requirements-cloud.txt src/explain.py README.md
+git add data/processed/scored_2023-24.parquet data/processed/injuries_clean_2023-24.parquet
+git commit -m "Add Streamlit Cloud demo artifacts and deploy config"
+git push origin master
+```
+
+If the parquet files are missing locally, run `python scripts/run_pipeline.py --season 2023-24` first.
+
+### Streamlit Cloud UI steps
+
+1. Open [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+2. Click **Create app** → **From existing repo**.
+3. **Repository:** `Trie-hard/Load_Watch`
+4. **Branch:** `master`
+5. **Main file path:** `dashboard/app.py`
+6. **App URL (slug):** e.g. `loadwatch` → public URL `https://loadwatch.streamlit.app`
+7. **Advanced settings → Python version:** `3.11` (matches `.python-version`)
+8. **Dependencies:** default `requirements.txt` works (slower install). For a faster boot, temporarily use the lines in `requirements-cloud.txt` as your `requirements.txt` on a deploy branch.
+9. Click **Deploy**. First build may take several minutes if using the full `requirements.txt`.
+
+### “Try it out” link for Devpost
+
+After deploy, use:
+
+`https://<your-app-slug>.streamlit.app`
+
+Example: `https://loadwatch.streamlit.app`
+
+### Troubleshooting
+
+- **“No scored data found”** — parquet files are not on the branch Streamlit built; commit and push them.
+- **Import errors for `shap` / `xgboost`** — use full `requirements.txt`, or ensure you are on the lazy-import `explain.py` (dashboard does not need those at runtime).
+- **Repo size** — do not commit `data/raw/`, `models/*.joblib`, or `scored_2023-24.csv`; parquet is enough.
+
+### Alternatives if Streamlit Cloud is blocked
+
+| Platform | Notes |
+|----------|--------|
+| [Hugging Face Spaces](https://huggingface.co/spaces) | Streamlit SDK; add `README.md` with `sdk: streamlit` and same `requirements.txt` |
+| [Railway](https://railway.app) | `streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0` |
+| [Render](https://render.com) | Free web service; same start command as Railway |
+
+---
+
 ## Actionable impact
 
 1. **Flag High-band players before a back-to-back** and discuss minutes caps or extra recovery with performance staff.  

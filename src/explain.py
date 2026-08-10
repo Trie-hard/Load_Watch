@@ -5,10 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import joblib
 import numpy as np
 import pandas as pd
-import shap
 
 from src.utils import DATA_PROCESSED, FEATURE_COLUMNS, MODELS_DIR, PRIMARY_SEASON, ensure_dirs, save_parquet, setup_logging
 
@@ -44,6 +42,9 @@ def compute_shap_top_factors(
     """
     Compute TreeSHAP values for scored player-games and persist top contributing factors.
     """
+    import joblib
+    import shap
+
     ensure_dirs()
     scored_path = DATA_PROCESSED / f"scored_{season}.parquet"
     if not scored_path.exists():

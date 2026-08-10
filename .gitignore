@@ -36,6 +36,9 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 !data/processed/README.md
+# Dashboard demo artifacts for Streamlit Cloud (parquet preferred over CSV)
+!data/processed/scored_2023-24.parquet
+!data/processed/injuries_clean_2023-24.parquet
 
 # Model artifacts can be large; keep metrics / coefficient tables
 models/*.pkl
