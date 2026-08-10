@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local secrets / env
+.env
+.env.*
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Large / regenerated data artifacts (keep processed sample if small)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/README.md
+
+# Model artifacts can be large; keep metrics / coefficient tables
+models/*.pkl
+models/*.joblib
+models/xgb_model.json
+!models/.gitkeep
+!models/metrics.json
+!models/logistic_coefficients.csv
+!models/shap_global_importance.csv
+
+# Logs / caches
+*.log
+.cache/
+.pytest_cache/
+htmlcov/
+.coverage
